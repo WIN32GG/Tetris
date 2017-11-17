@@ -20,3 +20,5 @@ Tetris/obj/
 *.config
 
 Tetris/Tetris\.csproj
+
+Tetris/bin/
