@@ -127,10 +127,10 @@ namespace Tetris.client.graphics
         private int CheckLines()
         {
             int n = 0;
-            for (int i = grid.GetLength(1) -1 ; i > 0 ; i--)
+            for (int i = grid.GetLength(0) -1 ; i > 0 ; i--)
             {
                 bool line = true;
-                for(int j = 0; j < grid.GetLength(0); j++)
+                for(int j = 0; j < grid.GetLength(1); j++)
                 {
                     if(grid[i, j] != GameEngine.OBJECT)
                     {
@@ -152,9 +152,9 @@ namespace Tetris.client.graphics
 
         private void DropAbove(int from, int l, int c)
         {
-            if (l < 0)
+            if (l == 0)
             {
-                DropAbove(from, l, c + 1);
+                DropAbove(from, from, c + 1);
                 return;
             }
                 
@@ -170,7 +170,10 @@ namespace Tetris.client.graphics
 
         private void RemoveLine(int l)
         {
-
+            for(int c = 0; c < grid.GetLength(1); c++)
+            {
+                grid[l, c] = GameEngine.FREE;
+            }
         }
 
         /// <summary>
@@ -196,7 +199,7 @@ namespace Tetris.client.graphics
                     currentPiece = null;
                     this.straightDown = false;
                     this.callback.PieceCollides();
-                
+                    this.CheckLines();
                 } 
             }
 
