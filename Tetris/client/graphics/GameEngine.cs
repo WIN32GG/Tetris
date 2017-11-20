@@ -13,6 +13,7 @@ namespace Tetris.client.graphics
         public const int FREE = 0;
         public const int OBJECT = 1;
         public const int BLOCKED = 2;
+        public readonly char[] REPRESENTATION_ARRAY = new char[] {' ', '#', '*'};
 
         private GraphicCallback callback;
         private int[] gridShape;
@@ -237,33 +238,15 @@ namespace Tetris.client.graphics
         {
             string buffer = "";
             
-
             DrawLine(ref buffer);
             for(int i = 0; i< gridShape[0]; i++)
             {
                 buffer += "█";
                 for (int j = 0; j< gridShape[1]; j++)
                 {
-                    char c = ' ';
-                    switch(grid[i,j])
-                    {
-                        case (GameEngine.BLOCKED):
-                            c = '*';
-                            break;
-
-                        case (GameEngine.OBJECT):
-                            c = '#';
-                            break;
-
-                        default:
-                            break;
-
-                    }
-                    buffer += c;
+                    buffer += REPRESENTATION_ARRAY[grid[i,j]];
                 }
                 buffer += "█\n";
-
-               
             }
             DrawLine(ref buffer);
 
