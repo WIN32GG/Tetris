@@ -250,7 +250,7 @@ namespace Tetris.client.graphics
             }
             DrawLine(ref buffer);
 
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             Console.Write(buffer);
 
         }
