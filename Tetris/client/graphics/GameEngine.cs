@@ -25,6 +25,8 @@ namespace Tetris.client.graphics
         private bool straightDown = false;
         private volatile bool running = true;
 
+        private int penalities = 0;
+
         private object consoleLock = new object();
 
         public GameEngine(GraphicCallback cb)
@@ -144,18 +146,20 @@ namespace Tetris.client.graphics
                 {
                     n += 1;
                     RemoveLine(i);
-                    DropAbove(i, i, 0);
+                    GoDown(i);
                 }
 
             }
             return n;
         }
 
-        private void DropAbove(int from, int l, int c)
+    
+
+        private void GoDown(int from, int l, int c)
         {
             if (l == 0)
             {
-                DropAbove(from, from, c + 1);
+                GoDown(from, from, c + 1);
                 return;
             }
                 
@@ -165,16 +169,56 @@ namespace Tetris.client.graphics
             grid[l, c] = grid[l - 1, c];
             grid[l - 1, c] = FREE;
 
-            DropAbove(from, l - 1, c);
+            GoDown(from, l - 1, c);
              
+        }
+
+        public void GoUp()
+        {
+            GoUp(0, 0);
+        }
+
+        private void GoDown(int l)
+        {
+            GoDown(l, l, 0);
+        }
+
+        private void GoUp(int l, int c)
+        {
+            if (l == grid.GetLength(0) - 1)
+            {
+                GoUp(0, c + 1);
+                return;
+            }
+
+            if (c == grid.GetLength(1))
+                return;
+
+            grid[l, c] = grid[l + 1, c];
+            grid[l + 1, c] = FREE;
+
+            GoUp(l + 1, c);
+        }
+
+        public void AddPenality()
+        {
+            penalities++;
+            GoUp();
+            SetLine(grid.GetLength(0) - 1, GameEngine.BLOCKED);
+           
+        }
+
+        private void SetLine(int l, int val)
+        {
+            for (int c = 0; c < grid.GetLength(1); c++)
+            {
+                grid[l, c] = val;
+            }
         }
 
         private void RemoveLine(int l)
         {
-            for(int c = 0; c < grid.GetLength(1); c++)
-            {
-                grid[l, c] = GameEngine.FREE;
-            }
+            SetLine(l, GameEngine.FREE);  
         }
 
         /// <summary>
