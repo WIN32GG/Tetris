@@ -22,3 +22,15 @@ Tetris/obj/
 Tetris/Tetris\.csproj
 
 Tetris/bin/
+
+TetrisNetwork/TetrisNetwork\.csproj
+
+TetrisNetwork/obj/
+
+TetrisNetwork/Properties/
+
+TetrisServer/TetrisServer\.csproj
+
+TetrisServer/Properties/
+
+TetrisServer/obj/

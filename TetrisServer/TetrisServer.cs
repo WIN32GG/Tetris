@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace TetrisServer
         
 
         private ServerConfig cfg;
-        private Dictionary<NetHandler, Client> clients = new Dictionary<NetHandler, Client>();
+        private ConcurrentDictionary<NetHandler, Client> clients = new ConcurrentDictionary<NetHandler, Client>();
         
 
         internal TetrisServer(ServerConfig cfg)
@@ -85,6 +86,7 @@ namespace TetrisServer
             foreach(Client c in this.clients.Values)
             {
                 this.SendConfig(c);
+                c.inGame = true;
             }
 
             this.LaunchGame();
@@ -196,7 +198,8 @@ namespace TetrisServer
         public void Disconnect(NetHandler handler, Exception ex)
         {
             Console.WriteLine("Removed Client");
-            clients.Remove(handler);
+            Client c = null;
+            clients.TryRemove(handler, out c);
         }
     }
 }

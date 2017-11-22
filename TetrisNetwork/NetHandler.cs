@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,10 @@ namespace TetrisNetwork
         private BinaryReader inputStream;
         private BinaryWriter outputStream;
 
+        private ConcurrentQueue<Packet> outputPacketList = new ConcurrentQueue<Packet>();
+
         private volatile bool running = true;
+        private Thread sendingThread;
 
         public NetHandler(Socket sck, SocketExceptionCallback srv)
         {
@@ -58,13 +62,15 @@ namespace TetrisNetwork
             this.outputStream = new BinaryWriter(stream);
 
             new Thread(this.ReceptionThreadTarget).Start();
+            this.sendingThread = new Thread(this.SendingThreadTarget);
+            this.sendingThread.Start();
         }
 
         public void SendPacket(Packet p)
         {
-            this.outputStream.Write(p.GetID());
-            p.WritePacket(this.outputStream);
-            this.outputStream.Flush();
+            this.outputPacketList.Enqueue(p);
+            if(this.sendingThread.ThreadState == ThreadState.Suspended)
+                this.sendingThread.Resume();
         }
 
         private void DispatchPacket(Packet p)
@@ -87,6 +93,22 @@ namespace TetrisNetwork
                     this.callback.HandlePacket1Connect((Packet1Connect)p);
                     return;
             }*/
+        }
+
+        private void SendingThreadTarget()
+        {
+            while(running)
+            {
+
+                Packet p = null;
+                if (this.outputPacketList.IsEmpty)
+                    Thread.CurrentThread.Suspend();
+                this.outputPacketList.TryDequeue(out p); 
+
+                this.outputStream.Write(p.GetID());
+                p.WritePacket(this.outputStream);
+                this.outputStream.Flush();
+            }
         }
 
         private void Close()

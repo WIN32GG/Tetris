@@ -16,7 +16,7 @@ namespace Tetris.client.graphics
         public readonly char[] REPRESENTATION_ARRAY = new char[] {' ', '#', '*'};
 
         private GraphicCallback callback;
-        private int[] gridShape;
+        private volatile int[] gridShape;
         private int[,] grid;
         private int delaySpeed = 500;
         private volatile bool los = false; //the piece has just been added, if collision -> lost
