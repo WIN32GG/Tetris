@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TetrisServer.server
+namespace Tetris.client
 {
-    interface IServer
+    class ClientConfig
     {
-
-
-
     }
 }

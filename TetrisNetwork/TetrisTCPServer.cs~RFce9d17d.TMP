@@ -15,10 +15,10 @@ namespace TetrisNetwork
 
         private volatile bool running = true;
       
-        public TetrisTCPServer(NetworkCallback clb)
+        public TetrisTCPServer(IServer clb)
             : base(IPAddress.Any, PORT) 
         {
-            
+            Console.WriteLine("Server listening on port " + PORT);
         }
 
         public new void Stop()

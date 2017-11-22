@@ -7,26 +7,22 @@ using System.Threading.Tasks;
 
 namespace TetrisNetwork.packets
 {
-    public class Packet1Connect:Packet
+    public class Packet4Line : Packet
     {
+        public int lineNumber;
 
-        public String playerName;
-        public int gameVersion;
-
-        public Packet1Connect() : base(1)
+        public Packet4Line() : base(4)
         {
         }
 
         public override void ReadPacket(BinaryReader reader)
         {
-            this.playerName = reader.ReadString();
-            this.gameVersion = reader.ReadInt32();
+            this.lineNumber = reader.ReadInt32();
         }
 
         public override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(this.playerName);
-            writer.Write(this.gameVersion);
+            writer.Write(this.lineNumber);
         }
     }
 }
