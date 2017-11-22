@@ -10,10 +10,14 @@ namespace TetrisServer
 {
     public class Client : NetworkCallback
     {
+
+        internal volatile bool inGame = true;
+
         public void HandlePacket1Connect(Packet1Connect p1)
         {
             //Send config
             TetrisServer.GetInstance().SendConfig(this);
+            TetrisServer.GetInstance().SendBlockIfStarted(this);
         }
 
         public void HandlePacket2Config(Packet2Config p2)
@@ -36,6 +40,7 @@ namespace TetrisServer
         public void HandlePacket5GameOver(Packet5GameOver p5)
         {
             //Deco?
+            TetrisServer.GetInstance().ClientLost(this);
         }
 
         public void HandlePacket6Info(Packet6Info p6)

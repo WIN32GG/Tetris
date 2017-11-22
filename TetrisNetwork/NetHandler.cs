@@ -16,11 +16,11 @@ namespace TetrisNetwork
     /// </summary>
     public class NetHandler
     {
-        public static Type[] PACKETS = new Type[] { null, typeof(Packet1Connect) };
+        public static readonly Type[] PACKETS = new Type[] { null, typeof(Packet1Connect), typeof(Packet2Config), typeof(Packet3Block), typeof(Packet4Line), typeof(Packet5GameOver), typeof(Packet6Info) };
 
         private Socket socket;
-        private NetworkCallback callback = null;
-        private SocketExceptionCallback exHandler;
+        private volatile NetworkCallback callback = null;
+        private volatile SocketExceptionCallback exHandler;
 
         private BinaryReader inputStream;
         private BinaryWriter outputStream;
@@ -47,7 +47,7 @@ namespace TetrisNetwork
 
         public string GetAdress()
         {
-            return this.socket.RemoteEndPoint.Serialize().ToString();
+            return this.socket.RemoteEndPoint.ToString();
         }
 
         private void SetupIO()
@@ -64,6 +64,7 @@ namespace TetrisNetwork
         {
             this.outputStream.Write(p.GetID());
             p.WritePacket(this.outputStream);
+            this.outputStream.Flush();
         }
 
         private void DispatchPacket(Packet p)
@@ -111,9 +112,11 @@ namespace TetrisNetwork
 
                 } catch(Exception e1)
                 {
-                    Console.WriteLine("/!\\ WARNING /!\\ Closing socket to: " + this.GetAdress());
+                    //Console.WriteLine("/!\\ WARNING /!\\ Closing socket to: " + this.GetAdress());
+                    //Console.WriteLine(e1);
                     this.Close();
                     this.exHandler.Disconnect(this, e1);
+                    return;
                 }
                 
                 try
@@ -122,7 +125,7 @@ namespace TetrisNetwork
                 }catch(Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
-                    //wait?
+                    // return; // <-- ?
                 }
 
             }

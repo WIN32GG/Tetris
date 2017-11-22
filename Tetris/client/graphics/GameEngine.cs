@@ -25,7 +25,8 @@ namespace Tetris.client.graphics
         private bool straightDown = false;
         private volatile bool running = true;
 
-        private int penalities = 0;
+        private volatile int penalities = 0;
+        private volatile int filled = 0;
 
         private object consoleLock = new object();
 
@@ -33,6 +34,7 @@ namespace Tetris.client.graphics
         {
             this.callback = cb;
             gridShape = cb.GridShape();
+            Console.CursorVisible = false;
         }
 
         public void OnPlayerAction(PlayerAction act)
@@ -42,8 +44,7 @@ namespace Tetris.client.graphics
                 case (PlayerAction.DOWN):
                     straightDown = true;
                     while (straightDown)
-                        DoGameUpdate();
-                    
+                        DoGameUpdate();                    
                     return;
 
                 case (PlayerAction.LEFT):
@@ -81,7 +82,6 @@ namespace Tetris.client.graphics
 
                 Render(DoGameUpdate());
             }
-
             
         }
 
@@ -115,7 +115,8 @@ namespace Tetris.client.graphics
                     this.callback.HitTop();
                 los = false;
 
-                Thread.Sleep(delaySpeed);
+                Thread.Sleep(1000 / 60); //60 FPS  --> use delta time
+
                 lock(consoleLock)
                 { 
                     Render(DoGameUpdate());
@@ -244,7 +245,10 @@ namespace Tetris.client.graphics
                     currentPiece = null;
                     this.straightDown = false;
                     this.callback.PieceCollides();
-                    this.CheckLines();
+                    int n = this.CheckLines();
+                    this.filled += n;
+                    if (n > 0)
+                        this.callback.LineFilled(n);
                 } 
             }
 
@@ -293,6 +297,10 @@ namespace Tetris.client.graphics
                 buffer += "█\n";
             }
             DrawLine(ref buffer);
+            buffer += "\n";
+            buffer += "Lignes faites: " + filled+"\n";
+            buffer += "Pénalités reçues: " + penalities+"\n";
+            buffer += "===========================\n";
 
             Console.SetCursorPosition(0, 0);
             Console.Write(buffer);

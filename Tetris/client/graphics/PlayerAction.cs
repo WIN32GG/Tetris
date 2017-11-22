@@ -5,6 +5,7 @@
         DOWN,
         ROTATE,
         LEFT,
-        RIGHT
+        RIGHT,
+        NONE
     }
 }

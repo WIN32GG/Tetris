@@ -9,8 +9,8 @@ namespace TetrisServer
 {
     public class ServerConfig
     {
-        public int columns = 7;
-        public int maxLines = 12;
+        public int columns = 12;
+        public int maxLines = 17;
         public int delay_time = 600;
         public int port = TetrisTCPServer.PORT;
     }

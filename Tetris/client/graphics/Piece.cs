@@ -8,14 +8,13 @@ namespace Tetris.client.graphics
 {
     class Piece
     {
-        public readonly int id;
+
         public readonly int[,] shape;
 
         private int[] pos = new int[] { 0, 0 };
 
-        public Piece(int id, int[,] shape)
+        public Piece(int[,] shape)
         {
-            this.id = id;
             this.shape = shape;
         }
 

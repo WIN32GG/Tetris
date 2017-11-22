@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -20,13 +21,16 @@ namespace TetrisNetwork
         public TetrisTCPServer(IServer server)
             : this(server, PORT)
         {
+            
             Console.WriteLine("The default port has been used");
         }
 
         public TetrisTCPServer(IServer server, int port)
             :base(IPAddress.Any, port)
         {
+            base.Start();
             this.theServer = server;
+            new Thread(this.ReceptionThreadTarget).Start();
             Console.WriteLine("Server listening on port " + port);
         }
 
@@ -40,9 +44,17 @@ namespace TetrisNetwork
         {
             while (running)
             {
-                NetHandler h = new NetHandler(base.AcceptSocket(), theServer);
-                Console.WriteLine("Connection from: " + h.GetAdress());
-                this.theServer.ClientConnect(h);
+                try
+                {
+                    NetHandler h = new NetHandler(base.AcceptSocket(), theServer);
+                    Console.WriteLine("Connection from: " + h.GetAdress());
+                    this.theServer.ClientConnect(h);
+                }catch(Exception ex)
+                {
+                    Console.WriteLine("Error while listening for connections");
+                    Console.WriteLine(ex);
+                    return;
+                }
             }
         }
 
