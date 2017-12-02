@@ -179,9 +179,10 @@ namespace Tetris.client
         
         public void Disconnect(NetHandler handler, Exception ex)
         {
-            Console.WriteLine("Disconnected from server");
             if(this.theEngine != null)
                 this.theEngine.Stop();
+            Console.Clear();
+            Console.WriteLine("Disconnected from server");
         }
     }
 }

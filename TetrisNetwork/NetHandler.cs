@@ -75,7 +75,7 @@ namespace TetrisNetwork
 
         private void DispatchPacket(Packet p)
         {
-            //TEST par réflection
+            //par réflection
             MethodInfo theMethod = this.callback.GetType().GetMethod("Handle" + p.GetType().Name);
 
             if(theMethod == null)
@@ -104,10 +104,12 @@ namespace TetrisNetwork
                 if (this.outputPacketList.IsEmpty)
                     Thread.CurrentThread.Suspend();
                 this.outputPacketList.TryDequeue(out p); 
-
-                this.outputStream.Write(p.GetID());
-                p.WritePacket(this.outputStream);
-                this.outputStream.Flush();
+                if(p != null)
+                {
+                    this.outputStream.Write(p.GetID());
+                    p.WritePacket(this.outputStream);
+                    this.outputStream.Flush();
+                }
             }
         }
 

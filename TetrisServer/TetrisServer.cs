@@ -22,9 +22,7 @@ namespace TetrisServer
         private TetrisTCPServer tcpServer;
         private bool launching = false;
         private bool playing = false;
-
         
-
         private ServerConfig cfg;
         private ConcurrentDictionary<NetHandler, Client> clients = new ConcurrentDictionary<NetHandler, Client>();
         
@@ -33,7 +31,7 @@ namespace TetrisServer
         {
             instance = this;
             this.cfg = cfg;
-            tcpServer = new TetrisTCPServer(this);
+            tcpServer = new TetrisTCPServer(this, cfg.port);
         }
 
         internal void SendBlockIfStarted(Client client)

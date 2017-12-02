@@ -13,17 +13,11 @@ namespace TetrisNetwork
     public class TetrisTCPServer: TcpListener
     {
 
-        public const int PORT = 28943;
+        public const int PORT = 28943; //default port that was used for test
 
         private volatile bool running = true;
         private IServer theServer;
       
-        public TetrisTCPServer(IServer server)
-            : this(server, PORT)
-        {
-            
-            Console.WriteLine("The default port has been used");
-        }
 
         public TetrisTCPServer(IServer server, int port)
             :base(IPAddress.Any, port)

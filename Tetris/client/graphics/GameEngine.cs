@@ -148,6 +148,7 @@ namespace Tetris.client.graphics
                     n += 1;
                     RemoveLine(i);
                     GoDown(i);
+                    i++; //FIXME <- 
                 }
 
             }

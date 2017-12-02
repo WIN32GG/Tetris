@@ -14,9 +14,13 @@ namespace TetrisServer
             //Handle args
             ServerConfig cfg = new ServerConfig();
 
-            new TetrisServer(cfg);
+            // listening_port number_of_columns maximum_number_of_lines delay_speed
+            cfg.port = Convert.ToInt32(args[0]);
+            cfg.columns = Convert.ToInt32(args[1]);
+            cfg.maxLines = Convert.ToInt32(args[2]);
+            cfg.delay_time = Convert.ToInt32(args[3]);
 
-          
+            new TetrisServer(cfg); //the server actually starts here
             Console.ReadLine();
 
         }
